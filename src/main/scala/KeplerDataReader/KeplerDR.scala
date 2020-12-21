@@ -18,26 +18,29 @@ object KeplerDR extends App {
   val csv = CSVHandler()
   val planets = csv.getAllPlanets(bufferedSource)
   bufferedSource.close
-  ui.logger("Done.")
+  ui.logger(" Done.")
 
   if (args.length == 0) {
-    ui.logger("No arguments found. Run with \"-help\" to see usage.")
+    ui.logger("No arguments found. Run with \"-help\" to see program usage.")
     System.exit(0)
   }
-
   val colNumbers = ArrayBuffer[Int]()
-  val columns = args.filter(_.startsWith("-"))
-  columns.foreach {
-    case "-yr" => colNumbers += 6
-    case "-op" => colNumbers += 11
-    case "-r" => colNumbers += 13
-    case "-m" => colNumbers += 15
-    case "-t" => colNumbers += 20
-    case "-d" => colNumbers += 35
-    case "-sm" => colNumbers += 26
-    case "-sr" => colNumbers += 25
-    case "-help" | "-h" => ui.usage()
-    case col => println(s"$col is not recognized.\n use -help to see usage.")
+
+  if (args.contains("-all") || args.contains("-a")) {
+    colNumbers +=(6,11,13,15,20,35,26,25)
+  } else {
+    args.foreach {
+      case "-yr" => colNumbers += 6
+      case "-op" => colNumbers += 11
+      case "-r" => colNumbers += 13
+      case "-m" => colNumbers += 15
+      case "-t" => colNumbers += 20
+      case "-d" => colNumbers += 35
+      case "-sm" => colNumbers += 26
+      case "-sr" => colNumbers += 25
+      case "-help" | "-h" => ui.usage()
+      case col => println(s"$col is not recognized.\n use \"-h\" to see program usage.")
+    }
   }
   val table = csv.buildNewCSVTable(planets, colNumbers.toArray)
   csv.writeCSVFile(table)

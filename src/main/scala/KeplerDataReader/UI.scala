@@ -37,7 +37,7 @@ case class UI() {
         |   -sm                                   Stellar Mass (solar mass)
         |   -sr                                   Stellar Radius (solar radius)
         |
-        |   --a                                   Generate a table with all possible columns.
+        |   -all, -a                              Generate a table with all possible columns.
         |
         |
               """.stripMargin)
