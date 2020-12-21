@@ -13,7 +13,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
  *
  */
 object KeplerDR extends App {
-  val terminal = new Terminal
+  val terminal = new UI
   terminal.welcomeMessage()
 
   val bufferedSource = io.Source.fromFile("cumulative_kepler2020.csv")

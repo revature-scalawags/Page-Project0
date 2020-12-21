@@ -1,6 +1,6 @@
 package KeplerDataReader
 
-case class Terminal() {
+case class UI() {
 
   def welcomeMessage(): Unit = {
     println("Welcome to Kepler Data Reader.\n")

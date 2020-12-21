@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="sbt 1" modules="kepler-dataset-reader_3116" />
+    <profile name="sbt 1" modules="KeplerDataReader,kepler-dataset-reader_3116" />
     <profile name="sbt 2" modules="Kepler Data Reader">
       <parameters>
         <parameter value="-Yrangepos" />
@@ -12,18 +12,6 @@
       </parameters>
       <plugins>
         <plugin path="$USER_HOME$/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalameta/semanticdb-scalac_2.12.12/4.4.0/semanticdb-scalac_2.12.12-4.4.0.jar" />
-      </plugins>
-    </profile>
-    <profile name="sbt 3" modules="KeplerDataReader">
-      <parameters>
-        <parameter value="-Yrangepos" />
-        <parameter value="-P:semanticdb:sourceroot:/Users/page/Repos/Kepler-DataSet-Reader" />
-        <parameter value="-P:semanticdb:targetroot:/Users/page/Repos/Kepler-DataSet-Reader/target/scala-2.13/meta" />
-        <parameter value="-P:semanticdb:synthetics:on" />
-        <parameter value="-P:semanticdb:failures:warning" />
-      </parameters>
-      <plugins>
-        <plugin path="$USER_HOME$/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scalameta/semanticdb-scalac_2.13.4/4.4.0/semanticdb-scalac_2.13.4-4.4.0.jar" />
       </plugins>
     </profile>
   </component>
