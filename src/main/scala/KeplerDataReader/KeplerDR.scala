@@ -26,8 +26,8 @@ object KeplerDR extends App {
   }
   val colNumbers = ArrayBuffer[Int]()
 
-  if (args.contains("-all") || args.contains("-a")) {
-    colNumbers +=(6,11,13,15,20,35,26,25)
+  if (args.contains("--all") || args.contains("--a")) {
+    colNumbers += (6,11,13,15,20,35,26,25)
   } else {
     args.foreach {
       case "-yr" => colNumbers += 6

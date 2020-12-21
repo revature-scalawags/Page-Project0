@@ -26,7 +26,7 @@ case class UI() {
         |
         |Options:
         |  -help, -h                             render aid
-        |
+        |_______________________________________________________________________________________________________
         |  -Columns:
         |   -yr                                   Discovery Year
         |   -op                                   Orbital Period
@@ -37,9 +37,9 @@ case class UI() {
         |   -sm                                   Stellar Mass (solar mass)
         |   -sr                                   Stellar Radius (solar radius)
         |
-        |   -all, -a                              Generate a table with all possible columns.
+        |   --all, --a                            Generate a table with all possible columns.
         |
-        |
+        |________________________________________________________________________________________________________
               """.stripMargin)
     System.exit(0)
   }
