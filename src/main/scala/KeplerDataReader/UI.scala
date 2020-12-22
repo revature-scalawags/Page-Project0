@@ -1,5 +1,8 @@
 package KeplerDataReader
 
+import scala.io.StdIn.readInt
+import scala.util.control.Breaks._
+
 case class UI() {
 
   def welcomeMessage(): Unit = {
@@ -23,11 +26,11 @@ case class UI() {
         |
         |Example (sbt):
         |  run -t -m -d -r
+        |_______________________________________________________________________________________________________
         |
         |Options:
-        |  -help, -h                             render aid
-        |_______________________________________________________________________________________________________
-        |  -Columns:
+        |  -help, -h                              render aid
+        |  Columns:
         |   -yr                                   Discovery Year
         |   -op                                   Orbital Period
         |   -m                                    Planetary Mass (earth mass)
@@ -44,7 +47,31 @@ case class UI() {
     System.exit(0)
   }
 
-/*  def promptForColumns(column: String): Boolean = {
+  def promptUser(header: String): (String, Boolean) = {
+    println("\nYou have created a database with the following columns:")
+    val cols =  header.split(",")
 
-  }*/
+    println("1.)   None")
+    for ((col, i) <- cols.zipWithIndex) {
+      println(s"${i+2}.)   $col")
+    }
+    print("\nEnter the number for the criteria you'd like to filter by.\nSelect \"None\" to fetch all data: ")
+
+    var input = -1
+    try {
+      breakable(
+      while(true) {
+        input = readInt()
+        if (input >= 1 && input <= cols.length + 1) {
+          break
+        }
+       print(s"Please select a valid choice from 1 to ${cols.length + 1}: ")
+      }
+      )
+    } catch {
+      case _: NumberFormatException => println(s"\nYou MUST select an integer value between 1 and ${cols.length + 1}.")
+        return (cols(input - 2), false)
+    }
+    (cols(input - 2), true)
+  }
 }
