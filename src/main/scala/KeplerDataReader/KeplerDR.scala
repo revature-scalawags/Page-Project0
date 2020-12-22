@@ -47,13 +47,14 @@ object KeplerDR extends App {
 //
 //  val planetsDAO = new PlanetDAO(MongoClient())
 //  planetsDAO.createNewCollection(table)
-  var constraint = 0
+
+  var constraint = ""
   while ({
     val (res, isValid) = ui.promptUser(table.head)
     constraint = res
     !isValid
   })()
-  println(constraint)
+
 
   sleep(5000)
 

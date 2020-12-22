@@ -47,7 +47,7 @@ case class UI() {
     System.exit(0)
   }
 
-  def promptUser(header: String): (Int, Boolean) = {
+  def promptUser(header: String): (String, Boolean) = {
     println("\nYou have created a database with the following columns:")
     val cols =  header.split(",")
 
@@ -57,12 +57,12 @@ case class UI() {
     }
     print("\nEnter the number for the criteria you'd like to filter by.\nSelect \"None\" to fetch all data: ")
 
-    var selected = -1
+    var input = -1
     try {
       breakable(
       while(true) {
-        selected = readInt()
-        if (selected >= 1 && selected <= cols.length + 1) {
+        input = readInt()
+        if (input >= 1 && input <= cols.length + 1) {
           break
         }
        print(s"Please select a valid choice from 1 to ${cols.length + 1}: ")
@@ -70,8 +70,8 @@ case class UI() {
       )
     } catch {
       case _: NumberFormatException => println(s"\nYou MUST select an integer value between 1 and ${cols.length + 1}.")
-        return (selected, false)
+        return (cols(input - 2), false)
     }
-    (selected, true)
+    (cols(input - 2), true)
   }
 }
