@@ -13,6 +13,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object KeplerDR extends App {
   val ui = new UI
   ui.welcomeMessage()
+  val db = new PlanetDAO(MongoClient())
 
   val bufferedSource = io.Source.fromFile("cumulative_kepler2020.csv")
   val csv = CSVHandler()
@@ -43,20 +44,45 @@ object KeplerDR extends App {
     }
   }
   val table = csv.buildNewCSVTable(planets, colNumbers.toArray)
-//  csv.writeCSVFile(table)
-//
-//  val planetsDAO = new PlanetDAO(MongoClient())
-//  planetsDAO.createNewCollection(table)
+  val csvFuture: Future[Unit] = Future {
+    csv.writeCSVFile(table)
+  }
+  csvFuture.onComplete(_=> println("CSV file completed."))
 
-  var constraint = ""
+  val dbFuture: Future[Unit] = Future {
+    db.createNewCollection(table)
+  }
+  dbFuture.onComplete(_=> println("Database complete and ready."))
+
+//  var response: Seq[Any] = Seq()
+  var constraintField = ""
   while ({
-    val (res, isValid) = ui.promptUser(table.head)
-    constraint = res
+    val (res, isValid) = ui.promptUsrConstraintField(table.head)
+    constraintField = res
     !isValid
   })()
 
+  if (constraintField != "None") {
+    var constraintType = ""
+    while ( {
+      val (res, isValid) = ui.promptUsrConstraintType(constraintField)
+      constraintType = res
+      !isValid
+    }) ()
 
-  sleep(5000)
+    var constraintValue: Any = ""
+    while ( {
+      val (res, isValid) = ui.promptUsrConstraintValue(constraintField, constraintType)
+      constraintValue = res
+      !isValid
+    }) ()
+    println(s"Printing all planets found with $constraintField $constraintType $constraintValue...")
+    db.printFilteredResults(constraintField, constraintType, constraintValue)
+  } else {
+    db.printAll
+  }
+
+  sleep(7000)
 
   def sleep(time: Long): Unit = Thread.sleep(time)
 }
