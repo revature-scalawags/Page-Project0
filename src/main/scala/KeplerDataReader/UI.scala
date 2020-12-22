@@ -47,7 +47,7 @@ case class UI() {
     System.exit(0)
   }
 
-  def promptUser(header: String): (String, Boolean) = {
+  def promptUsrConstraintField(header: String): (String, Boolean) = {
     println("\nYou have created a database with the following columns:")
     val cols =  header.split(",")
 
@@ -73,5 +73,38 @@ case class UI() {
         return (cols(input - 2), false)
     }
     (cols(input - 2), true)
+  }
+
+  def promptUsrConstraintType(col: String): (String, Boolean) = {
+    println(s"\nYou have selected the $col column:\n")
+    println("1.) All planets with some value EQUAL TO.")
+    println("2.) All planets with some value GREATER THAN.")
+    println("3.) All planets with some value LESS THAN.\n")
+
+    print("\nEnter the number for the type of filter you would like to use: ")
+
+    var input = -1
+    try {
+      breakable(
+        while(true) {
+          input = readInt()
+          if (input >= 1 && input <= 3) {
+            break
+          }
+          print(s"Please select a valid choice from 1 to 3: ")
+        }
+      )
+    } catch {
+      case _: NumberFormatException => println(s"\nYou MUST select an integer value between 1 and 3.")
+        return (getQueryType(input), false)
+    }
+    (getQueryType(input), true)
+  }
+
+  def getQueryType(choice: Int): String = choice match {
+    case 1 => "EQUAL TO"
+    case 2 => "GREATER THAN"
+    case 3 => "LESS THAN"
+    case _ => "Goes with the exception"
   }
 }
