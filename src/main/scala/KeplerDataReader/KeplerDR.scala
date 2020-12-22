@@ -32,21 +32,28 @@ object KeplerDR extends App {
     args.foreach {
       case "-yr" => colNumbers += 6
       case "-op" => colNumbers += 11
-      case "-r" => colNumbers += 13
       case "-m" => colNumbers += 15
       case "-t" => colNumbers += 20
+      case "-r" => colNumbers += 13
       case "-d" => colNumbers += 35
       case "-sm" => colNumbers += 26
       case "-sr" => colNumbers += 25
       case "-help" | "-h" => ui.usage()
-      case col => println(s"$col is not recognized.\n use \"-h\" to see program usage.")
+      case col => println(s"$col is not recognized. use '-h' to see program usage.")
     }
   }
   val table = csv.buildNewCSVTable(planets, colNumbers.toArray)
-  csv.writeCSVFile(table)
-
-  val planetsDAO = new PlanetDAO(MongoClient())
-  planetsDAO.createNewCollection(table)
+//  csv.writeCSVFile(table)
+//
+//  val planetsDAO = new PlanetDAO(MongoClient())
+//  planetsDAO.createNewCollection(table)
+  var constraint = 0
+  while ({
+    val (res, isValid) = ui.promptUser(table.head)
+    constraint = res
+    !isValid
+  })()
+  println(constraint)
 
   sleep(5000)
 
