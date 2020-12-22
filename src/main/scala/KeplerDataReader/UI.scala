@@ -2,7 +2,7 @@ package KeplerDataReader
 
 import scala.io.StdIn.{readInt, readLine}
 import scala.util.control.Breaks._
-
+import java.lang.ArrayIndexOutOfBoundsException
 case class UI() {
 
   def welcomeMessage(): Unit = {
@@ -72,7 +72,9 @@ case class UI() {
       case _: NumberFormatException => println(s"\nYou MUST select an integer value between 1 and ${cols.length + 1}.")
         return (cols(input - 2), false)
     }
-    (cols(input - 2), true)
+    try {
+      (cols(input - 2), true)
+    } catch { case _: java.lang.ArrayIndexOutOfBoundsException => ("None", true) }
   }
 
   def promptUsrConstraintType(col: String): (String, Boolean) = {
@@ -131,7 +133,7 @@ case class UI() {
   def getQueryType(choice: Int): String = choice match {
     case 1 => "EQUAL TO"
     case 2 => "GREATER THAN"
-    case 3 => "LESS THAN"
+      case 3 => "LESS THAN"
     case _ => "Goes with the exception"
   }
 }
