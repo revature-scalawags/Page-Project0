@@ -1,6 +1,6 @@
 package KeplerDataReader
 
-import scala.io.StdIn.readInt
+import scala.io.StdIn.{readInt, readLine}
 import scala.util.control.Breaks._
 
 case class UI() {
@@ -76,7 +76,7 @@ case class UI() {
   }
 
   def promptUsrConstraintType(col: String): (String, Boolean) = {
-    println(s"\nYou have selected the $col column:\n")
+    println(s"\nYou have selected the $col column.\n")
     println("1.) All planets with some value EQUAL TO.")
     println("2.) All planets with some value GREATER THAN.")
     println("3.) All planets with some value LESS THAN.\n")
@@ -86,7 +86,7 @@ case class UI() {
     var input = -1
     try {
       breakable(
-        while(true) {
+        while (true) {
           input = readInt()
           if (input >= 1 && input <= 3) {
             break
@@ -99,6 +99,33 @@ case class UI() {
         return (getQueryType(input), false)
     }
     (getQueryType(input), true)
+  }
+
+  def promptUsrConstraintValue(col: String, filter: String): (Any, Boolean) = {
+    println(s"\nYou are searching for planets with $col $filter some value.\n")
+
+    print("Please enter that value: ")
+
+    var input = if (col == "planet" || col == "host_star") "" else -1
+    try {
+      if (col == "planet" || col == "host_star") {
+        breakable(
+          while (true) {
+            input = readLine()
+            if (input.toString.length > 5) {
+              break
+            }
+            print(s"$input doesn't seem right. You can do a better search than that: ")
+          }
+        )
+      } else {
+        input = readInt()
+      }
+    } catch {
+      case _: NumberFormatException => println(s"\nYou MUST select an integer value between 1 and 3.")
+        return (input, false)
+    }
+    (input, true)
   }
 
   def getQueryType(choice: Int): String = choice match {

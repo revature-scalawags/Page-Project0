@@ -62,6 +62,13 @@ object KeplerDR extends App {
     !isValid
   })()
 
+  var constraintValue: Any = ""
+  while ({
+    val (res, isValid) = ui.promptUsrConstraintValue(constraintField, constraintType)
+    constraintValue = res
+    !isValid
+  })()
+
 
   sleep(5000)
 
