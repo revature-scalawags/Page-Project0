@@ -1,6 +1,8 @@
 package KeplerDataReader
 
-import scala.Console.{RESET => rt, MAGENTA => mg, CYAN => cy, RED => rd, YELLOW => yl, BLUE => bu, GREEN => gr}
+import java.io.BufferedWriter
+
+import scala.Console.{BLUE => bu, CYAN => cy, GREEN => gr, MAGENTA => mg, RED => rd, RESET => rt, YELLOW => yl}
 import scala.io.StdIn.{readInt, readLine}
 import scala.util.control.Breaks._
 case class UI() {
@@ -53,12 +55,28 @@ case class UI() {
         |   --all, --a                            Generate a table with all possible columns.
         |
         |________________________________________________________________________________________________________
-              """.stripMargin)
+              """.stripMargin
+    )
     System.exit(0)
   }
 
-  def logger(message: String): Unit = println(message)
-  def logger(message: String, noNewLine: Boolean): Unit = print(message)
+  def logger(message: String, bw: BufferedWriter): Unit = {
+    val now = getTimeStamp
+    bw.newLine()
+    bw.write(now +": "+ message)
+    println(message)
+  }
+  def logger(message: String, bw: BufferedWriter, noNewLine: Boolean): Unit = {
+    val now = getTimeStamp
+    bw.newLine()
+    bw.write(now +": "+ message)
+    bw.newLine()
+    bw.write("EOF")
+    bw.close()
+    print(message)
+  }
+
+  def getTimeStamp: String = java.time.LocalDateTime.now().toString
 
   def promptUsrConstraintField(header: String): (String, Boolean) = {
     println("\nYou have created a database with the following columns:")
