@@ -41,7 +41,7 @@ case class UI() {
         |_______________________________________________________________________________________________________
         |
         |Options:
-        |  -help, -h                              render aid
+        |  -help, -h                              Render Aid
         |  Columns:
         |   -yr                                   Discovery Year
         |   -op                                   Orbital Period
@@ -66,6 +66,7 @@ case class UI() {
     bw.write(now +": "+ message)
     println(message)
   }
+
   def logger(message: String, bw: BufferedWriter, noNewLine: Boolean): Unit = {
     val now = getTimeStamp
     try {
@@ -73,7 +74,6 @@ case class UI() {
       bw.write(now + ": " + message)
       bw.newLine()
       bw.write("EOF")
-//      bw.close()
     } catch {case _: Throwable => println(s"$rt${rd}Logging Failure$rt")}
     println(message)
   }

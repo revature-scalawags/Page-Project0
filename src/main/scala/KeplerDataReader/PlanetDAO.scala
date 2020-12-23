@@ -15,6 +15,7 @@ class PlanetDAO(mongoClient: MongoClient) {
     fromProviders(classOf[Planet]),
     MongoClient.DEFAULT_CODEC_REGISTRY
   )
+  
   val db: MongoDatabase = mongoClient.getDatabase("kepler_db").withCodecRegistry(codecRegistry)
   val collection: MongoCollection[Planet] = db.getCollection("exoplanets")
 
@@ -26,7 +27,7 @@ class PlanetDAO(mongoClient: MongoClient) {
     try {
       mongoClient.close()
     } catch {
-      case e: Throwable => println("lover boy")
+      case e: Throwable => println(e)
     }
   }
 
@@ -63,7 +64,7 @@ class PlanetDAO(mongoClient: MongoClient) {
     case "eq_temp_K" => p.eq_temp_K = if (value == "") return else value.toFloat
     case "stellar_radius_sol" => p.stellar_radius_sol = if (value == "") return else value.toDouble
     case "stellar_mass_sol" => p.stellar_mass_sol = if (value == "") return else value.toDouble
-    case "distance_(pc)" => p.distance_pc = if (value == "") return else value.toDouble
+    case "distance_pc" => p.distance_pc = if (value == "") return else value.toDouble
     case _  =>
   }
 }

@@ -22,8 +22,8 @@ object KeplerDR extends App {
   val planets = csv.getAllPlanets(bufferedSource)
   bufferedSource.close
 
-  val hasLogFile: Boolean = Files.exists(Paths.get("log.txt"))
   val file = new File("log.txt")
+  val hasLogFile: Boolean = Files.exists(Paths.get("log.txt"))
   val bw = new BufferedWriter(new FileWriter(file, hasLogFile))
 
   if (args.length == 0) {
@@ -56,11 +56,15 @@ object KeplerDR extends App {
   }
   csvFuture.onComplete(_ => ui.logger(s"$rt${cy}CSV file ready$rt. ", bw))
 
-  println("Building new table to collection... ")
+  println("Adding new table to the database... ")
   val dbFuture: Future[Unit] = Future {
     db.createNewCollection(table)
   }
-  dbFuture.onComplete(_=> ui.logger(s"\n$rt${yl}Dataset complete and ready to go$rt.", bw))
+  dbFuture.onComplete(_=> {
+    ui.logger(s"\n$rt${mg}Dataset complete.$rt.", bw)
+    ui.logger(s"Processed $rt$yl${table.tail.length}$rt entries.", bw)
+
+  })
   sleep(1000)
 
   var constraintField: String = _
