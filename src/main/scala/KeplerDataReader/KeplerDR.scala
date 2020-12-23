@@ -1,12 +1,12 @@
 package KeplerDataReader
 
 import java.io.{BufferedWriter, File, FileWriter}
-
 import scala.Console.{CYAN => cy, MAGENTA => mg, RESET => rt, YELLOW => yl}
+import scala.concurrent.ExecutionContext.Implicits.global
 import org.mongodb.scala.MongoClient
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import java.nio.file.{Paths, Files}
 
 /** KeplerDataReader
  *
@@ -22,8 +22,9 @@ object KeplerDR extends App {
   val planets = csv.getAllPlanets(bufferedSource)
   bufferedSource.close
 
+  val hasLogFile: Boolean = Files.exists(Paths.get("log.txt"))
   val file = new File("log.txt")
-  val bw = new BufferedWriter(new FileWriter(file))
+  val bw = new BufferedWriter(new FileWriter(file, hasLogFile))
 
   if (args.length == 0) {
     ui.logger(s"No arguments found. Run with '$rt$mg-help$rt' to see program usage.", bw)
@@ -101,10 +102,11 @@ object KeplerDR extends App {
     future.onComplete(_ => {
       ui.logger("Closing database connection... ", bw, noNewLine = true)
       db.closeConnection()
+      sleep(2500)
       println(s"$rt${yl}done$rt.")
     })
   }
 
-  sleep(5000)
+  sleep(3000)
   def sleep(time: Long): Unit = Thread.sleep(time)
 }

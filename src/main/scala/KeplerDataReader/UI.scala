@@ -68,12 +68,14 @@ case class UI() {
   }
   def logger(message: String, bw: BufferedWriter, noNewLine: Boolean): Unit = {
     val now = getTimeStamp
-    bw.newLine()
-    bw.write(now +": "+ message)
-    bw.newLine()
-    bw.write("EOF")
-    bw.close()
-    print(message)
+    try {
+      bw.newLine()
+      bw.write(now + ": " + message)
+      bw.newLine()
+      bw.write("EOF")
+//      bw.close()
+    } catch {case _: Throwable => println(s"$rt${rd}Logging Failure$rt")}
+    println(message)
   }
 
   def getTimeStamp: String = java.time.LocalDateTime.now().toString
@@ -86,7 +88,7 @@ case class UI() {
     for ((col, i) <- cols.zipWithIndex) {
       println(s"$rt$gr${i+2}$rt.)   $col")
     }
-    print(s"\nEnter the number for the criteria you'd like to filter by.\nSelect $rt$cy'None'$rt to fetch all data: ")
+    print(s"\nEnter the number for the criteria you'd like to filter by.\nSelect $rt$cy'None'$rt to fetch all data: \n")
 
     var input = -1
     try {

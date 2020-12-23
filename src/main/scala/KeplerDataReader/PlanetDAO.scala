@@ -22,7 +22,13 @@ class PlanetDAO(mongoClient: MongoClient) {
     Await.result(obs.toFuture(), Duration(20, SECONDS))
   }
 
-  def closeConnection(): Unit = mongoClient.close()
+  def closeConnection(): Unit = {
+    try {
+      mongoClient.close()
+    } catch {
+      case e: Throwable => println("lover boy")
+    }
+  }
 
   def createNewCollection(table: List[String]): Unit = {
     val header = table.head.split(",")
@@ -51,7 +57,7 @@ class PlanetDAO(mongoClient: MongoClient) {
     case "planet" => p.planet = value
     case "host_star" => p.host_star = value
     case "discovery_year" => p.discovery_year = if (value == "") return else value.toInt
-    case "orbital_Period_days" => p.orbital_period_days = if (value == "") return else value.toDouble
+    case "orbital_period_days" => p.orbital_period_days = if (value == "") return else value.toDouble
     case "radius_earths" => p.radius_earth = if (value == "") return else value.toDouble
     case "mass_earth" => p.mass_earth = if (value == "") return else value.toDouble
     case "eq_temp_K" => p.eq_temp_K = if (value == "") return else value.toFloat
