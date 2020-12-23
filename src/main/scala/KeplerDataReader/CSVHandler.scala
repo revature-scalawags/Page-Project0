@@ -1,9 +1,6 @@
 package KeplerDataReader
 
 import java.io.{BufferedWriter, File, FileWriter}
-
-import KeplerDataReader.KeplerDR.{args, colNumbers}
-
 import scala.jdk.CollectionConverters._
 import scala.collection.mutable.{ArrayBuffer, StringBuilder}
 import scala.io.BufferedSource

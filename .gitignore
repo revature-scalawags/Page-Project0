@@ -168,5 +168,6 @@ project/**/metals.sbt
 
 ### custom ###
 keplerSet.csv
+log.txt
 
 # End of https://www.toptal.com/developers/gitignore/api/scala,sbt,macos,intellij,vscode,metals

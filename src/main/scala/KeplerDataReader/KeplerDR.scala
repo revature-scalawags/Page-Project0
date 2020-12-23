@@ -1,12 +1,12 @@
 package KeplerDataReader
 
 import java.io.{BufferedWriter, File, FileWriter}
-
 import scala.Console.{CYAN => cy, MAGENTA => mg, RESET => rt, YELLOW => yl}
+import scala.concurrent.ExecutionContext.Implicits.global
 import org.mongodb.scala.MongoClient
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import java.nio.file.{Paths, Files}
 
 /** KeplerDataReader
  *
@@ -23,7 +23,8 @@ object KeplerDR extends App {
   bufferedSource.close
 
   val file = new File("log.txt")
-  val bw = new BufferedWriter(new FileWriter(file))
+  val hasLogFile: Boolean = Files.exists(Paths.get("log.txt"))
+  val bw = new BufferedWriter(new FileWriter(file, hasLogFile))
 
   if (args.length == 0) {
     ui.logger(s"No arguments found. Run with '$rt$mg-help$rt' to see program usage.", bw)
@@ -55,11 +56,15 @@ object KeplerDR extends App {
   }
   csvFuture.onComplete(_ => ui.logger(s"$rt${cy}CSV file ready$rt. ", bw))
 
-  println("Building new table to collection... ")
+  println("Adding new table to the database... ")
   val dbFuture: Future[Unit] = Future {
     db.createNewCollection(table)
   }
-  dbFuture.onComplete(_=> ui.logger(s"\n$rt${yl}Dataset complete and ready to go$rt.", bw))
+  dbFuture.onComplete(_=> {
+    ui.logger(s"\n$rt${mg}Dataset complete.$rt.", bw)
+    ui.logger(s"Processed $rt$yl${table.tail.length}$rt entries.", bw)
+
+  })
   sleep(1000)
 
   var constraintField: String = _
@@ -101,10 +106,11 @@ object KeplerDR extends App {
     future.onComplete(_ => {
       ui.logger("Closing database connection... ", bw, noNewLine = true)
       db.closeConnection()
+      sleep(2500)
       println(s"$rt${yl}done$rt.")
     })
   }
 
-  sleep(5000)
+  sleep(3000)
   def sleep(time: Long): Unit = Thread.sleep(time)
 }

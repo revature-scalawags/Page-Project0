@@ -15,6 +15,7 @@ class PlanetDAO(mongoClient: MongoClient) {
     fromProviders(classOf[Planet]),
     MongoClient.DEFAULT_CODEC_REGISTRY
   )
+  
   val db: MongoDatabase = mongoClient.getDatabase("kepler_db").withCodecRegistry(codecRegistry)
   val collection: MongoCollection[Planet] = db.getCollection("exoplanets")
 
@@ -22,7 +23,13 @@ class PlanetDAO(mongoClient: MongoClient) {
     Await.result(obs.toFuture(), Duration(20, SECONDS))
   }
 
-  def closeConnection(): Unit = mongoClient.close()
+  def closeConnection(): Unit = {
+    try {
+      mongoClient.close()
+    } catch {
+      case e: Throwable => println(e)
+    }
+  }
 
   def createNewCollection(table: List[String]): Unit = {
     val header = table.head.split(",")
@@ -51,13 +58,13 @@ class PlanetDAO(mongoClient: MongoClient) {
     case "planet" => p.planet = value
     case "host_star" => p.host_star = value
     case "discovery_year" => p.discovery_year = if (value == "") return else value.toInt
-    case "orbital_Period_days" => p.orbital_period_days = if (value == "") return else value.toDouble
+    case "orbital_period_days" => p.orbital_period_days = if (value == "") return else value.toDouble
     case "radius_earths" => p.radius_earth = if (value == "") return else value.toDouble
     case "mass_earth" => p.mass_earth = if (value == "") return else value.toDouble
     case "eq_temp_K" => p.eq_temp_K = if (value == "") return else value.toFloat
     case "stellar_radius_sol" => p.stellar_radius_sol = if (value == "") return else value.toDouble
     case "stellar_mass_sol" => p.stellar_mass_sol = if (value == "") return else value.toDouble
-    case "distance_(pc)" => p.distance_pc = if (value == "") return else value.toDouble
+    case "distance_pc" => p.distance_pc = if (value == "") return else value.toDouble
     case _  =>
   }
 }
