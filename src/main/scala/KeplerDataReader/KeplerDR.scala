@@ -44,17 +44,19 @@ object KeplerDR extends App {
     }
   }
   val table = csv.buildNewCSVTable(planets, colNumbers.toArray)
+
+  print("Generating CSV file... ")
   val csvFuture: Future[Unit] = Future {
     csv.writeCSVFile(table)
   }
-  csvFuture.onComplete(_=> println("CSV file completed."))
+  csvFuture.onComplete(_ => println("done. "))
 
+  println("Adding new table to database... ")
   val dbFuture: Future[Unit] = Future {
     db.createNewCollection(table)
   }
   dbFuture.onComplete(_=> println("Database complete and ready."))
-
-//  var response: Seq[Any] = Seq()
+  
   var constraintField = ""
   while ({
     val (res, isValid) = ui.promptUsrConstraintField(table.head)
@@ -76,11 +78,29 @@ object KeplerDR extends App {
       constraintValue = res
       !isValid
     }) ()
+
     println(s"Printing all planets found with $constraintField $constraintType $constraintValue...")
-    db.printFilteredResults(constraintField, constraintType, constraintValue)
+    val printFuture: Future[Unit] = Future {
+      db.printFilteredResults(constraintField, constraintType, constraintValue)
+    }
+    printFuture.onComplete(_ => {
+      print("Closing database connection... ")
+      db.closeConnection()
+      println("done.")
+    })
   } else {
-    db.printAll
+    println("Printing all planets...")
+    val printFuture: Future[Unit] = Future {
+      db.printAll
+    }
+    printFuture.onComplete(_ => {
+      print("Closing database connection... ")
+      db.closeConnection()
+      println("done.")
+    })
   }
+
+  db.closeConnection()
 
   sleep(7000)
 

@@ -22,6 +22,8 @@ class PlanetDAO(mongoClient: MongoClient) {
     Await.result(obs.toFuture(), Duration(20, SECONDS))
   }
 
+  def closeConnection(): Unit = mongoClient.close()
+
   def createNewCollection(table: List[String]): Unit = {
     val header = table.head.split(",")
     val docs = table.tail.map(row => (header zip row.split(",")).toMap)
