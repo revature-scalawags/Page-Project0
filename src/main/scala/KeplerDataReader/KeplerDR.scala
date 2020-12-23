@@ -55,7 +55,7 @@ object KeplerDR extends App {
   val dbFuture: Future[Unit] = Future {
     db.createNewCollection(table)
   }
-  dbFuture.onComplete(_=> println("Database complete and ready."))
+  dbFuture.onComplete(_=> println("\nDatabase complete and ready."))
 
   var constraintField: String = _
   while ({

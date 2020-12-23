@@ -2,6 +2,9 @@ package KeplerDataReader
 
 import org.bson.types.ObjectId
 
+import scala.language.postfixOps
+import scala.util.matching.Regex
+
 case class Planet(
                    _id: ObjectId,
                    var planet: String = "",
@@ -17,16 +20,17 @@ case class Planet(
                  ) {
 
   override def toString: String = {
-    s"""Planet: $planet | Host Star: $host_star
-      s"${if(discovery_year != 0) s"Discovery Year: $discovery_year"}
-      s"${if(orbital_period_days != 0) s"Orbital Period (days):$orbital_period_days"}
-      s"${if(radius_earth != 0) s"Radius (earth): $radius_earth"} | " +
-      s"${if(mass_earth != 0) s"Mass (earth): $mass_earth"} | " +
-      s"${if(eq_temp_K != 0) s"Equilibrium Temp (K): $eq_temp_K"} | " +
-      s"${if(stellar_mass_sol != 0) s"Stellar Mass (sol): $stellar_mass_sol"} | " +
-      s"${if(stellar_radius_sol != 0) s"Stellar Radius (sol): $stellar_radius_sol"} | " +
-      s"${if(distance_pc != 0) s"Distance (parsec): $distance_pc"} |
-      """
+    s"""Planet: $planet
+        Host Star: $host_star
+        ${if (discovery_year != 0) s"Discovery Year: $discovery_year" else "Discovery Year: Unavailable"}
+        ${if (orbital_period_days != 0) s"Orbital Period (days):$orbital_period_days" else "Orbital Period (days): Unavailable"}
+        ${if (radius_earth != 0) s"Radius (earth): $radius_earth" else "Radius (earth): Unavailable"}
+        ${if (mass_earth != 0) s"Mass (earth): $mass_earth" else "Mass (earth): Unavailable"}
+        ${if (eq_temp_K != 0) s"Equilibrium Temp (K): $eq_temp_K" else "Equilibrium Temp (K): Unavailable"}
+        ${if (stellar_mass_sol != 0) s"Stellar Mass (sol): $stellar_mass_sol" else "Stellar Mass (sol): Unavailable"}
+        ${if (stellar_radius_sol != 0) s"Stellar Radius (sol): $stellar_radius_sol" else "Stellar Radius (sol): Unavailable"}
+        ${if (distance_pc != 0) s"Distance (parsec): $distance_pc" else "Distance (parsec): Unavailable"}
+     """
   }
 }
 
