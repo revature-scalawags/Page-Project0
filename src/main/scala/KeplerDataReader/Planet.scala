@@ -1,5 +1,6 @@
 package KeplerDataReader
 
+import scala.Console.{RESET => rt, BLUE => bu}
 import org.bson.types.ObjectId
 
 case class Planet(
@@ -17,7 +18,7 @@ case class Planet(
                  ) {
 
   override def toString: String =
-    s"""Planet: $planet
+    s"""Planet: $rt$bu$planet$rt
         Host Star: $host_star
         ${if (discovery_year != 0) s"Discovery Year: $discovery_year" else "Discovery Year: Unavailable"}
         ${if (orbital_period_days != 0) s"Orbital Period (days):$orbital_period_days" else "Orbital Period (days): Unavailable"}

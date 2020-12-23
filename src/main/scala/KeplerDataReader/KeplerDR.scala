@@ -1,7 +1,7 @@
 package KeplerDataReader
 
+import scala.Console.{RESET => rt, MAGENTA => mg, CYAN => cy, YELLOW => yl}
 import org.mongodb.scala.MongoClient
-
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -21,7 +21,7 @@ object KeplerDR extends App {
   bufferedSource.close
 
   if (args.length == 0) {
-    ui.logger("No arguments found. Run with \"-help\" to see program usage.")
+    ui.logger(s"No arguments found. Run with '$rt$mg-help$rt' to see program usage.")
     System.exit(0)
   }
   val colNumbers = ArrayBuffer[Int]()
@@ -39,7 +39,7 @@ object KeplerDR extends App {
       case "-sm" => colNumbers += 26
       case "-sr" => colNumbers += 25
       case "-help" | "-h" => ui.usage()
-      case col => println(s"$col is not recognized. use '-h' to see program usage.")
+      case col => ui.logger(s"$col is not recognized. use '$rt$mg-h$rt' to see program usage.")
     }
   }
   val table = csv.buildNewCSVTable(planets, colNumbers.toArray)
@@ -48,13 +48,13 @@ object KeplerDR extends App {
   val csvFuture: Future[Unit] = Future {
     csv.writeCSVFile(table)
   }
-  csvFuture.onComplete(_ => println("CSV file ready. "))
+  csvFuture.onComplete(_ => ui.logger(s"$rt${cy}CSV file ready$rt. "))
 
-  println("Adding new table to database... ")
+  println("Building new table to collection... ")
   val dbFuture: Future[Unit] = Future {
     db.createNewCollection(table)
   }
-  dbFuture.onComplete(_=> println("\nDatabase complete and ready to go."))
+  dbFuture.onComplete(_=> ui.logger(s"\n$rt${yl}Dataset complete and ready to go$rt."))
   sleep(1000)
 
   var constraintField: String = _
@@ -79,28 +79,27 @@ object KeplerDR extends App {
       !isValid
     }) ()
 
-    println(s"Printing all planets found with $constraintField $constraintType $constraintValue...")
+    ui.logger(s"$rt${mg}Printing all planets found with$rt $constraintField $constraintType $constraintValue...")
     val printFuture: Future[Unit] = Future {
       db.printFilteredResults(constraintField, constraintType, constraintValue)
     }
-    printFuture.onComplete(_ => {
-      print("Closing database connection... ")
-      db.closeConnection()
-      println("done.")
-    })
+    wrapUp(printFuture)
   } else {
-    println("Printing all planets...")
+    ui.logger(s"$rt${mg}Printing all planets$rt...")
     val printFuture: Future[Unit] = Future {
       db.printAll()
     }
-    printFuture.onComplete(_ => {
-      print("Closing database connection... ")
+    wrapUp(printFuture)
+  }
+
+  def wrapUp(future: Future[Unit]): Unit = {
+    future.onComplete(_ => {
+      ui.logger("Closing database connection... ", noNewLine = true)
       db.closeConnection()
-      println("done.")
+      ui.logger(s"$rt${yl}done$rt.")
     })
   }
 
-  sleep(7000)
-
+  sleep(5000)
   def sleep(time: Long): Unit = Thread.sleep(time)
 }
