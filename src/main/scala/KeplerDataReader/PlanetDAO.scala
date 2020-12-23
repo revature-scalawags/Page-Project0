@@ -4,7 +4,7 @@ import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistr
 import org.bson.codecs.configuration.CodecRegistry
 import org.mongodb.scala._
 import org.mongodb.scala.bson.codecs.Macros._
-import org.mongodb.scala.model.Filters.{equal, gt, lt}
+import org.mongodb.scala.model.Filters.{equal, gt, lt, and}
 import tour.Helpers._
 
 import scala.concurrent.Await
@@ -22,6 +22,8 @@ class PlanetDAO(mongoClient: MongoClient) {
     Await.result(obs.toFuture(), Duration(20, SECONDS))
   }
 
+  def closeConnection(): Unit = mongoClient.close()
+
   def createNewCollection(table: List[String]): Unit = {
     val header = table.head.split(",")
     val docs = table.tail.map(row => (header zip row.split(",")).toMap)
@@ -37,15 +39,15 @@ class PlanetDAO(mongoClient: MongoClient) {
     }
   }
 
-  def printAll: Unit = collection.find().printResults()
+  def printAll(): Unit = collection.find().printResults()
 
   def printFilteredResults(field: String, constraint: String, value: Any): Unit = constraint match {
-    case "EQUAL TO" => collection.find(equal(field, value)).printResults()
-    case "GREATER THAN" => collection.find(gt(field, value)).printResults()
-    case "LESS THAN" => collection.find(lt(field, value)).printResults()
+    case "EQUAL TO" => try {collection.find(equal(field, value)).printResults()} catch {case e: Throwable => println(e)}
+    case "GREATER THAN" => try {collection.find(gt(field, value)).printResults()} catch {case e: Throwable => println(e)}
+    case "LESS THAN" => try {collection.find(and(gt(field, 0), lt(field, value))).printResults()} catch {case e: Throwable => println(e)}
   }
 
-  private def getColumnValues(key: String, value: String, p: Planet): Unit = key match {
+  def getColumnValues(key: String, value: String, p: Planet): Unit = key match {
     case "planet" => p.planet = value
     case "host_star" => p.host_star = value
     case "discovery_year" => p.discovery_year = if (value == "") return else value.toInt

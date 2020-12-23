@@ -2,7 +2,6 @@ package KeplerDataReader
 
 import scala.io.StdIn.{readInt, readLine}
 import scala.util.control.Breaks._
-import java.lang.ArrayIndexOutOfBoundsException
 case class UI() {
 
   def welcomeMessage(): Unit = {
@@ -10,9 +9,8 @@ case class UI() {
     print("Loading exoplanet data file...")
   }
 
-  def logger(message: String): Unit = {
-    println(message)
-  }
+  def logger(message: String): Unit = println(message)
+
 
   def usage(): Unit = {
     println(
@@ -58,23 +56,22 @@ case class UI() {
     print("\nEnter the number for the criteria you'd like to filter by.\nSelect \"None\" to fetch all data: ")
 
     var input = -1
-    try {
-      breakable(
-      while(true) {
-        input = readInt()
-        if (input >= 1 && input <= cols.length + 1) {
-          break
-        }
-       print(s"Please select a valid choice from 1 to ${cols.length + 1}: ")
+    try breakable(
+    while(true) {
+      input = readInt()
+      if (input >= 1 && input <= cols.length + 1) {
+        break
       }
-      )
-    } catch {
-      case _: NumberFormatException => println(s"\nYou MUST select an integer value between 1 and ${cols.length + 1}.")
+     print(s"Please select a valid choice from 1 to ${cols.length + 1}: ")
+    }
+    ) catch {
+      case _: NumberFormatException | _: ArrayIndexOutOfBoundsException =>
+        println(s"\nYou MUST select an integer value between 1 and ${cols.length + 1}.")
         return (cols(input - 2), false)
     }
     try {
       (cols(input - 2), true)
-    } catch { case _: java.lang.ArrayIndexOutOfBoundsException => ("None", true) }
+    } catch { case _: ArrayIndexOutOfBoundsException => ("None", true) }
   }
 
   def promptUsrConstraintType(col: String): (String, Boolean) = {
@@ -97,7 +94,8 @@ case class UI() {
         }
       )
     } catch {
-      case _: NumberFormatException => println(s"\nYou MUST select an integer value between 1 and 3.")
+      case _: NumberFormatException | _: ArrayIndexOutOfBoundsException =>
+        println(s"\nYou MUST select an integer value between 1 and 3.")
         return (getQueryType(input), false)
     }
     (getQueryType(input), true)
@@ -124,7 +122,8 @@ case class UI() {
         input = readInt()
       }
     } catch {
-      case _: NumberFormatException => println(s"\nYou MUST select an integer value between 1 and 3.")
+      case _: NumberFormatException | _: ArrayIndexOutOfBoundsException =>
+        println(s"\nYou MUST select an integer value between 1 and 3.")
         return (input, false)
     }
     (input, true)

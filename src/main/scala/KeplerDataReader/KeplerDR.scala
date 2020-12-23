@@ -19,7 +19,6 @@ object KeplerDR extends App {
   val csv = CSVHandler()
   val planets = csv.getAllPlanets(bufferedSource)
   bufferedSource.close
-  ui.logger(" Done.")
 
   if (args.length == 0) {
     ui.logger("No arguments found. Run with \"-help\" to see program usage.")
@@ -44,18 +43,20 @@ object KeplerDR extends App {
     }
   }
   val table = csv.buildNewCSVTable(planets, colNumbers.toArray)
+
+  print("Generating CSV file... ")
   val csvFuture: Future[Unit] = Future {
     csv.writeCSVFile(table)
   }
-  csvFuture.onComplete(_=> println("CSV file completed."))
+  csvFuture.onComplete(_ => println("done. "))
 
+  println("Adding new table to database... ")
   val dbFuture: Future[Unit] = Future {
     db.createNewCollection(table)
   }
-  dbFuture.onComplete(_=> println("Database complete and ready."))
+  dbFuture.onComplete(_=> println("\nDatabase complete and ready."))
 
-//  var response: Seq[Any] = Seq()
-  var constraintField = ""
+  var constraintField: String = _
   while ({
     val (res, isValid) = ui.promptUsrConstraintField(table.head)
     constraintField = res
@@ -63,23 +64,39 @@ object KeplerDR extends App {
   })()
 
   if (constraintField != "None") {
-    var constraintType = ""
+    var constraintType: String = null
     while ( {
       val (res, isValid) = ui.promptUsrConstraintType(constraintField)
       constraintType = res
       !isValid
     }) ()
 
-    var constraintValue: Any = ""
+    var constraintValue: Any = null
     while ( {
       val (res, isValid) = ui.promptUsrConstraintValue(constraintField, constraintType)
       constraintValue = res
       !isValid
     }) ()
+
     println(s"Printing all planets found with $constraintField $constraintType $constraintValue...")
-    db.printFilteredResults(constraintField, constraintType, constraintValue)
+    val printFuture: Future[Unit] = Future {
+      db.printFilteredResults(constraintField, constraintType, constraintValue)
+    }
+    printFuture.onComplete(_ => {
+      print("Closing database connection... ")
+      db.closeConnection()
+      println("done.")
+    })
   } else {
-    db.printAll
+    println("Printing all planets...")
+    val printFuture: Future[Unit] = Future {
+      db.printAll
+    }
+    printFuture.onComplete(_ => {
+      print("Closing database connection... ")
+      db.closeConnection()
+      println("done.")
+    })
   }
 
   sleep(7000)
