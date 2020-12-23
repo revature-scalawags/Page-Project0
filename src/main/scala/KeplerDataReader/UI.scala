@@ -9,9 +9,8 @@ case class UI() {
     print("Loading exoplanet data file...")
   }
 
-  def logger(message: String): Unit = {
-    println(message)
-  }
+  def logger(message: String): Unit = println(message)
+
 
   def usage(): Unit = {
     println(
@@ -95,7 +94,8 @@ case class UI() {
         }
       )
     } catch {
-      case _: NumberFormatException => println(s"\nYou MUST select an integer value between 1 and 3.")
+      case _: NumberFormatException | _: ArrayIndexOutOfBoundsException =>
+        println(s"\nYou MUST select an integer value between 1 and 3.")
         return (getQueryType(input), false)
     }
     (getQueryType(input), true)
@@ -122,7 +122,8 @@ case class UI() {
         input = readInt()
       }
     } catch {
-      case _: NumberFormatException => println(s"\nYou MUST select an integer value between 1 and 3.")
+      case _: NumberFormatException | _: ArrayIndexOutOfBoundsException =>
+        println(s"\nYou MUST select an integer value between 1 and 3.")
         return (input, false)
     }
     (input, true)

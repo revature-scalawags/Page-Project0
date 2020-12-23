@@ -2,9 +2,6 @@ package KeplerDataReader
 
 import org.bson.types.ObjectId
 
-import scala.language.postfixOps
-import scala.util.matching.Regex
-
 case class Planet(
                    _id: ObjectId,
                    var planet: String = "",
@@ -19,7 +16,7 @@ case class Planet(
                    var distance_pc: Double = 0
                  ) {
 
-  override def toString: String = {
+  override def toString: String =
     s"""Planet: $planet
         Host Star: $host_star
         ${if (discovery_year != 0) s"Discovery Year: $discovery_year" else "Discovery Year: Unavailable"}
@@ -30,8 +27,7 @@ case class Planet(
         ${if (stellar_mass_sol != 0) s"Stellar Mass (sol): $stellar_mass_sol" else "Stellar Mass (sol): Unavailable"}
         ${if (stellar_radius_sol != 0) s"Stellar Radius (sol): $stellar_radius_sol" else "Stellar Radius (sol): Unavailable"}
         ${if (distance_pc != 0) s"Distance (parsec): $distance_pc" else "Distance (parsec): Unavailable"}
-     """
-  }
+     """.stripMargin
 }
 
 object Planet {

@@ -42,12 +42,12 @@ class PlanetDAO(mongoClient: MongoClient) {
   def printAll(): Unit = collection.find().printResults()
 
   def printFilteredResults(field: String, constraint: String, value: Any): Unit = constraint match {
-    case "EQUAL TO" => collection.find(equal(field, value)).printResults()
-    case "GREATER THAN" => collection.find(gt(field, value)).printResults()
-    case "LESS THAN" => collection.find(and(gt(field, 0), lt(field, value))).printResults()
+    case "EQUAL TO" => try {collection.find(equal(field, value)).printResults()} catch {case e: Throwable => println(e)}
+    case "GREATER THAN" => try {collection.find(gt(field, value)).printResults()} catch {case e: Throwable => println(e)}
+    case "LESS THAN" => try {collection.find(and(gt(field, 0), lt(field, value))).printResults()} catch {case e: Throwable => println(e)}
   }
 
-  private def getColumnValues(key: String, value: String, p: Planet): Unit = key match {
+  def getColumnValues(key: String, value: String, p: Planet): Unit = key match {
     case "planet" => p.planet = value
     case "host_star" => p.host_star = value
     case "discovery_year" => p.discovery_year = if (value == "") return else value.toInt

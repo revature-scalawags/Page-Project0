@@ -19,7 +19,6 @@ object KeplerDR extends App {
   val csv = CSVHandler()
   val planets = csv.getAllPlanets(bufferedSource)
   bufferedSource.close
-  ui.logger(" Done.")
 
   if (args.length == 0) {
     ui.logger("No arguments found. Run with \"-help\" to see program usage.")
