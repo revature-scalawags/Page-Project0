@@ -17,15 +17,16 @@ case class Planet(
                  ) {
 
   override def toString: String = {
-    s"Planet: $planet | Host Star: $host_star | " +
-      s"${if(discovery_year != 0) s"Discovery Year: $discovery_year"} | " +
-      s"${if(orbital_period_days != 0) s"Orbital Period (days):$orbital_period_days"} | " +
+    s"""Planet: $planet | Host Star: $host_star
+      s"${if(discovery_year != 0) s"Discovery Year: $discovery_year"}
+      s"${if(orbital_period_days != 0) s"Orbital Period (days):$orbital_period_days"}
       s"${if(radius_earth != 0) s"Radius (earth): $radius_earth"} | " +
       s"${if(mass_earth != 0) s"Mass (earth): $mass_earth"} | " +
       s"${if(eq_temp_K != 0) s"Equilibrium Temp (K): $eq_temp_K"} | " +
       s"${if(stellar_mass_sol != 0) s"Stellar Mass (sol): $stellar_mass_sol"} | " +
       s"${if(stellar_radius_sol != 0) s"Stellar Radius (sol): $stellar_radius_sol"} | " +
-      s"${if(distance_pc != 0) s"Distance (parsec): $distance_pc"} | "
+      s"${if(distance_pc != 0) s"Distance (parsec): $distance_pc"} |
+      """
   }
 }
 

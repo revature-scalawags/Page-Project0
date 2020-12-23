@@ -56,8 +56,8 @@ object KeplerDR extends App {
     db.createNewCollection(table)
   }
   dbFuture.onComplete(_=> println("Database complete and ready."))
-  
-  var constraintField = ""
+
+  var constraintField: String = _
   while ({
     val (res, isValid) = ui.promptUsrConstraintField(table.head)
     constraintField = res
@@ -65,14 +65,14 @@ object KeplerDR extends App {
   })()
 
   if (constraintField != "None") {
-    var constraintType = ""
+    var constraintType: String = null
     while ( {
       val (res, isValid) = ui.promptUsrConstraintType(constraintField)
       constraintType = res
       !isValid
     }) ()
 
-    var constraintValue: Any = ""
+    var constraintValue: Any = null
     while ( {
       val (res, isValid) = ui.promptUsrConstraintValue(constraintField, constraintType)
       constraintValue = res
@@ -99,8 +99,6 @@ object KeplerDR extends App {
       println("done.")
     })
   }
-
-  db.closeConnection()
 
   sleep(7000)
 

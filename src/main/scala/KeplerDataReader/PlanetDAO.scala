@@ -4,7 +4,7 @@ import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistr
 import org.bson.codecs.configuration.CodecRegistry
 import org.mongodb.scala._
 import org.mongodb.scala.bson.codecs.Macros._
-import org.mongodb.scala.model.Filters.{equal, gt, lt}
+import org.mongodb.scala.model.Filters.{equal, gt, lt, and}
 import tour.Helpers._
 
 import scala.concurrent.Await
@@ -39,12 +39,12 @@ class PlanetDAO(mongoClient: MongoClient) {
     }
   }
 
-  def printAll: Unit = collection.find().printResults()
+  def printAll(): Unit = collection.find().printResults()
 
   def printFilteredResults(field: String, constraint: String, value: Any): Unit = constraint match {
     case "EQUAL TO" => collection.find(equal(field, value)).printResults()
     case "GREATER THAN" => collection.find(gt(field, value)).printResults()
-    case "LESS THAN" => collection.find(lt(field, value)).printResults()
+    case "LESS THAN" => collection.find(and(gt(field, 0), lt(field, value))).printResults()
   }
 
   private def getColumnValues(key: String, value: String, p: Planet): Unit = key match {
