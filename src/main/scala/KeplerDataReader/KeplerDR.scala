@@ -44,17 +44,18 @@ object KeplerDR extends App {
   }
   val table = csv.buildNewCSVTable(planets, colNumbers.toArray)
 
-  print("Generating CSV file... ")
+  println("Generating CSV file... ")
   val csvFuture: Future[Unit] = Future {
     csv.writeCSVFile(table)
   }
-  csvFuture.onComplete(_ => println("done. "))
+  csvFuture.onComplete(_ => println("CSV file ready. "))
 
   println("Adding new table to database... ")
   val dbFuture: Future[Unit] = Future {
     db.createNewCollection(table)
   }
-  dbFuture.onComplete(_=> println("\nDatabase complete and ready."))
+  dbFuture.onComplete(_=> println("\nDatabase complete and ready to go."))
+  sleep(1000)
 
   var constraintField: String = _
   while ({
@@ -90,7 +91,7 @@ object KeplerDR extends App {
   } else {
     println("Printing all planets...")
     val printFuture: Future[Unit] = Future {
-      db.printAll
+      db.printAll()
     }
     printFuture.onComplete(_ => {
       print("Closing database connection... ")

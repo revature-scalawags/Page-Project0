@@ -5,12 +5,23 @@ import scala.util.control.Breaks._
 case class UI() {
 
   def welcomeMessage(): Unit = {
-    println("Welcome to Kepler Data Reader.\n")
-    print("Loading exoplanet data file...")
+      println(
+        """
+        ##########################################################################################################
+        #-----------------------------------Welcome the Kepler Data Reader---------------------------------------#
+        #The program that imports the NASA provided data file for the exoplanets found with the Kepler project.  #
+        #                                                                                                        #
+        #The user provides command line arguments to select whichever columns from the data source they'd like   #
+        #  to have in their generated .csv file and loaded to a database.                                        #
+        #                                                                                                        #
+        #* Note: All generated tables will at least include columns for the planet names and its host star name. #
+        #                                                                                                        #
+        #Example (sbt):                                                                                          #
+        #  use 'run --help' to view program usage.                                                               #
+        ##########################################################################################################
+    """.stripMargin
+   )
   }
-
-  def logger(message: String): Unit = println(message)
-
 
   def usage(): Unit = {
     println(
@@ -44,6 +55,8 @@ case class UI() {
               """.stripMargin)
     System.exit(0)
   }
+
+  def logger(message: String): Unit = println(message)
 
   def promptUsrConstraintField(header: String): (String, Boolean) = {
     println("\nYou have created a database with the following columns:")
