@@ -1,16 +1,28 @@
 package KeplerDataReader
 
+import scala.Console.{RESET => rt, MAGENTA => mg, CYAN => cy, RED => rd, YELLOW => yl, BLUE => bu, GREEN => gr}
 import scala.io.StdIn.{readInt, readLine}
 import scala.util.control.Breaks._
 case class UI() {
 
   def welcomeMessage(): Unit = {
-    println("Welcome to Kepler Data Reader.\n")
-    print("Loading exoplanet data file...")
+      println(
+        s"""
+        ##########################################################################################################
+        #-----------------------------------$rt${cy}Welcome the Kepler Data Reader$rt---------------------------------------#
+        #The program that imports the NASA provided data file for the exoplanets found with the Kepler project.  #
+        #                                                                                                        #
+        #The user provides command line arguments to select whichever columns from the data source they'd like   #
+        #  to have in their generated .csv file and loaded to a database.                                        #
+        #                                                                                                        #
+        #* Note: $rt${bu}All generated tables will at least include columns for the planet names and its host star name$rt. #
+        #                                                                                                        #
+        #Example (sbt):                                                                                          #
+        #  $rt${mg}use 'run --help' to view program usage$rt.                                                               #
+        ##########################################################################################################
+    """.stripMargin
+   )
   }
-
-  def logger(message: String): Unit = println(message)
-
 
   def usage(): Unit = {
     println(
@@ -45,28 +57,33 @@ case class UI() {
     System.exit(0)
   }
 
+  def logger(message: String): Unit = println(message)
+  def logger(message: String, noNewLine: Boolean): Unit = print(message)
+
   def promptUsrConstraintField(header: String): (String, Boolean) = {
     println("\nYou have created a database with the following columns:")
     val cols =  header.split(",")
 
-    println("1.)   None")
+    println(s"$rt${gr}1$rt.)   None")
     for ((col, i) <- cols.zipWithIndex) {
-      println(s"${i+2}.)   $col")
+      println(s"$rt$gr${i+2}$rt.)   $col")
     }
-    print("\nEnter the number for the criteria you'd like to filter by.\nSelect \"None\" to fetch all data: ")
+    print(s"\nEnter the number for the criteria you'd like to filter by.\nSelect $rt$cy'None'$rt to fetch all data: ")
 
     var input = -1
-    try breakable(
+    try {
+      breakable(
     while(true) {
       input = readInt()
       if (input >= 1 && input <= cols.length + 1) {
         break
       }
-     print(s"Please select a valid choice from 1 to ${cols.length + 1}: ")
+      print(s"Please select a valid choice from $rt${rd}1$rt to $rt$cy${cols.length + 1}$rt: ")
     }
-    ) catch {
+   )
+    } catch {
       case _: NumberFormatException | _: ArrayIndexOutOfBoundsException =>
-        println(s"\nYou MUST select an integer value between 1 and ${cols.length + 1}.")
+        println(s"\n$rt${rd}You MUST select an integer value between 1 and ${cols.length + 1}$rt.")
         return (cols(input - 2), false)
     }
     try {
@@ -75,12 +92,12 @@ case class UI() {
   }
 
   def promptUsrConstraintType(col: String): (String, Boolean) = {
-    println(s"\nYou have selected the $col column.\n")
-    println("1.) All planets with some value EQUAL TO.")
-    println("2.) All planets with some value GREATER THAN.")
-    println("3.) All planets with some value LESS THAN.\n")
+    println(s"\nYou have selected the $rt$cy$col$rt column.\n")
+    println(s"$rt${gr}1$rt.) All planets with some value EQUAL TO.")
+    println(s"$rt${gr}2$rt.) All planets with some value GREATER THAN.")
+    println(s"$rt${gr}3$rt.) All planets with some value LESS THAN.\n")
 
-    print("\nEnter the number for the type of filter you would like to use: ")
+    print("\nEnter a number for the type of filter you would like to use: ")
 
     var input = -1
     try {
@@ -90,19 +107,19 @@ case class UI() {
           if (input >= 1 && input <= 3) {
             break
           }
-          print(s"Please select a valid choice from 1 to 3: ")
+          print(s"Please select a valid choice from $rt${rd}1$rt to $rt${rd}3$rt: ")
         }
       )
     } catch {
       case _: NumberFormatException | _: ArrayIndexOutOfBoundsException =>
-        println(s"\nYou MUST select an integer value between 1 and 3.")
+        println(s"$rt$rd\nYou MUST select an integer value between 1 and 3$rt.")
         return (getQueryType(input), false)
     }
     (getQueryType(input), true)
   }
 
   def promptUsrConstraintValue(col: String, filter: String): (Any, Boolean) = {
-    println(s"\nYou are searching for planets with $col $filter some value.\n")
+    println(s"\nYou are searching for planets with $rt$cy$col $filter$rt some value.\n")
 
     print("Please enter that value: ")
 
@@ -115,7 +132,7 @@ case class UI() {
             if (input.toString.length > 5) {
               break
             }
-            print(s"$input doesn't seem right. You can do a better search than that: ")
+            print(s"$rt$yl$input$rt doesn't seem right. You can do a better search than that: ")
           }
         )
       } else {
@@ -123,7 +140,7 @@ case class UI() {
       }
     } catch {
       case _: NumberFormatException | _: ArrayIndexOutOfBoundsException =>
-        println(s"\nYou MUST select an integer value between 1 and 3.")
+        println(s"$rt$rd\nYou MUST select an integer value between$rt.")
         return (input, false)
     }
     (input, true)
