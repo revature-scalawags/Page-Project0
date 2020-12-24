@@ -6,8 +6,8 @@ Nasa's kepler project was a years long endeavour that set out to discover and re
 
 
 ## Tech Used and Required
-Scala and SBT: (https://www.scala-lang.org/download/2.12.8.html)
-JDK (v11): (https://jdk.java.net/15/)
+Scala and SBT: (https://www.scala-lang.org/download/2.12.8.html).    
+JDK (v11): (https://jdk.java.net/15/).    
 MongoDB: org.mongodb.scala
 
 ## Project:
