@@ -62,18 +62,10 @@ case class UI() {
 
   def logger(message: String, bw: BufferedWriter): Unit = {
     val now = getTimeStamp
-    bw.newLine()
-    bw.write(now +": "+ message)
-    println(message)
-  }
-
-  def logger(message: String, bw: BufferedWriter, noNewLine: Boolean): Unit = {
-    val now = getTimeStamp
     try {
       bw.newLine()
       bw.write(now + ": " + message)
       bw.newLine()
-      bw.write("EOF")
     } catch {case _: Throwable => println(s"$rt${rd}Logging Failure$rt")}
     println(message)
   }

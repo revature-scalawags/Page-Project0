@@ -24,16 +24,16 @@ class KeplerDRSpecs extends AnyFunSuite {
     val (key3, value3) = ("stellar_mass_sol", "3.333")
     val (key4, value4) = ("eq_temp_K", "4.568")
 
-    db.getColumnValues(key1, value1, p)
+    p.getColumnValues(key1, value1)
       assert(p.discovery_year == 1492)
 
-    db.getColumnValues(key2, value2, p)
+    p.getColumnValues(key2, value2)
           assert(p.radius_earth == 1.234d)
 
-    db.getColumnValues(key3, value3, p)
+    p.getColumnValues(key3, value3)
       assert(p.stellar_mass_sol == 3.333d)
 
-    db.getColumnValues(key4, value4, p)
+    p.getColumnValues(key4, value4)
       assert(p.eq_temp_K == 4.568f)
   }
 }

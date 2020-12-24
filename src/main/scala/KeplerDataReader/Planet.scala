@@ -29,6 +29,20 @@ case class Planet(
         ${if (stellar_radius_sol != 0) s"Stellar Radius (sol): $stellar_radius_sol" else "Stellar Radius (sol): Unavailable"}
         ${if (distance_pc != 0) s"Distance (parsec): $distance_pc" else "Distance (parsec): Unavailable"}
      """.stripMargin
+
+  def getColumnValues(key: String, value: String): Unit = key match {
+    case "planet" => this.planet = value
+    case "host_star" => this.host_star = value
+    case "discovery_year" => this.discovery_year = value.toInt
+    case "orbital_period_days" => this.orbital_period_days =  value.toDouble
+    case "radius_earths" => this.radius_earth =  value.toDouble
+    case "mass_earth" => this.mass_earth =  value.toDouble
+    case "eq_temp_K" => this.eq_temp_K =  value.toFloat
+    case "stellar_radius_sol" => this.stellar_radius_sol = value.toDouble
+    case "stellar_mass_sol" => this.stellar_mass_sol = value.toDouble
+    case "distance_pc" => this.distance_pc =  value.toDouble
+    case _  =>
+  }
 }
 
 object Planet {

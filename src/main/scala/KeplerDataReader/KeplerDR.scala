@@ -104,9 +104,10 @@ object KeplerDR extends App {
 
   def wrapUp(future: Future[Unit]): Unit = {
     future.onComplete(_ => {
-      ui.logger("Closing database connection... ", bw, noNewLine = true)
+      ui.logger("Writing log..", bw)
+      ui.logger("Closing database connection... ", bw)
       db.closeConnection()
-      sleep(2500)
+      bw.close()
       println(s"$rt${yl}done$rt.")
     })
   }
