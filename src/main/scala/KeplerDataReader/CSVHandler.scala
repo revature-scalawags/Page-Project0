@@ -9,12 +9,10 @@ case class CSVHandler() {
 
   def getAllPlanets(data: BufferedSource): List[String] = {
     val planets = ArrayBuffer[String]()
-    var count = 0
 
     //drop header, add rows
     for (line <- data.getLines.drop(46)) {
       planets += line
-      count = count + 1
     }
     planets.toList
   }
