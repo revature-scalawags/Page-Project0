@@ -33,7 +33,7 @@ object KeplerDR extends App {
   val colNumbers = ArrayBuffer[Int]()
 
   if (args.contains("--all") || args.contains("--a")) {
-    colNumbers += (6,11,13,15,20,35,26,25)
+    colNumbers += (6, 11, 13, 15, 20, 35, 26, 25)
   } else {
     args.foreach {
       case "-yr" => colNumbers += 6
@@ -60,19 +60,18 @@ object KeplerDR extends App {
   val dbFuture: Future[Unit] = Future {
     db.createNewCollection(table)
   }
-  dbFuture.onComplete(_=> {
+  dbFuture.onComplete(_ => {
     ui.logger(s"\n$rt${mg}Dataset complete.$rt.", bw)
     ui.logger(s"Processed $rt$yl${table.tail.length}$rt entries.", bw)
 
   })
-  sleep(1000)
 
   var constraintField: String = _
-  while ({
+  while ( {
     val (res, isValid) = ui.promptUsrConstraintField(table.head)
     constraintField = res
     !isValid
-  })()
+  }) ()
 
   if (constraintField != "None") {
     var constraintType: String = null
@@ -113,5 +112,6 @@ object KeplerDR extends App {
   }
 
   sleep(3000)
+
   def sleep(time: Long): Unit = Thread.sleep(time)
 }

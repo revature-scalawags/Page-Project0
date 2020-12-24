@@ -5,11 +5,12 @@ import java.io.BufferedWriter
 import scala.Console.{BLUE => bu, CYAN => cy, GREEN => gr, MAGENTA => mg, RED => rd, RESET => rt, YELLOW => yl}
 import scala.io.StdIn.{readInt, readLine}
 import scala.util.control.Breaks._
+
 case class UI() {
 
   def welcomeMessage(): Unit = {
-      println(
-        s"""
+    println(
+      s"""
         ##########################################################################################################
         #-----------------------------------$rt${cy}Welcome the Kepler Data Reader$rt---------------------------------------#
         #The program that imports the NASA provided data file for the exoplanets found with the Kepler project.  #
@@ -23,7 +24,7 @@ case class UI() {
         #  $rt${mg}use 'run --help' to view program usage$rt.                                                               #
         ##########################################################################################################
     """.stripMargin
-   )
+    )
   }
 
   def usage(): Unit = {
@@ -66,7 +67,9 @@ case class UI() {
       bw.newLine()
       bw.write(now + ": " + message)
       bw.newLine()
-    } catch {case _: Throwable => println(s"$rt${rd}Logging Failure$rt")}
+    } catch {
+      case _: Throwable => println(s"$rt${rd}Logging Failure$rt")
+    }
     println(message)
   }
 
@@ -74,25 +77,25 @@ case class UI() {
 
   def promptUsrConstraintField(header: String): (String, Boolean) = {
     println("\nYou have created a database with the following columns:")
-    val cols =  header.split(",")
+    val cols = header.split(",")
 
     println(s"$rt${gr}1$rt.)   None")
     for ((col, i) <- cols.zipWithIndex) {
-      println(s"$rt$gr${i+2}$rt.)   $col")
+      println(s"$rt$gr${i + 2}$rt.)   $col")
     }
     print(s"\nEnter the number for the criteria you'd like to filter by.\nSelect $rt$cy'None'$rt to fetch all data: \n")
 
     var input = -1
     try {
       breakable(
-    while(true) {
-      input = readInt()
-      if (input >= 1 && input <= cols.length + 1) {
-        break
-      }
-      print(s"Please select a valid choice from $rt${rd}1$rt to $rt$cy${cols.length + 1}$rt: ")
-    }
-   )
+        while (true) {
+          input = readInt()
+          if (input >= 1 && input <= cols.length + 1) {
+            break
+          }
+          print(s"Please select a valid choice from $rt${rd}1$rt to $rt$cy${cols.length + 1}$rt: ")
+        }
+      )
     } catch {
       case _: NumberFormatException | _: ArrayIndexOutOfBoundsException =>
         println(s"\n$rt${rd}You MUST select an integer value between 1 and ${cols.length + 1}$rt.")
@@ -100,7 +103,9 @@ case class UI() {
     }
     try {
       (cols(input - 2), true)
-    } catch { case _: ArrayIndexOutOfBoundsException => ("None", true) }
+    } catch {
+      case _: ArrayIndexOutOfBoundsException => ("None", true)
+    }
   }
 
   def promptUsrConstraintType(col: String): (String, Boolean) = {
@@ -161,7 +166,7 @@ case class UI() {
   def getQueryType(choice: Int): String = choice match {
     case 1 => "EQUAL TO"
     case 2 => "GREATER THAN"
-      case 3 => "LESS THAN"
+    case 3 => "LESS THAN"
     case _ => "Goes with the exception"
   }
 }
