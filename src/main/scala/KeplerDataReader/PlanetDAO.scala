@@ -38,7 +38,7 @@ class PlanetDAO(mongoClient: MongoClient) {
     try {
       docs.foreach(m => {
         val p = Planet()
-        for ((k, v) <- m) p.getColumnValues(k, v)
+        for ((k, v) <- m) p.setFieldValues(k, v)
         getResults(collection.insertOne(p))
       })
     } catch {
